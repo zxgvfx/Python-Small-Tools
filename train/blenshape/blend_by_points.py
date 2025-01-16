@@ -1,8 +1,5 @@
-import os
 import torch
-from pytorch3d.io import load_obj, save_obj
 from pytorch3d.structures import Meshes
-from pytorch3d.utils import ico_sphere
 from pytorch3d.ops import sample_points_from_meshes
 from pytorch3d.loss import (
     chamfer_distance,
@@ -10,17 +7,21 @@ from pytorch3d.loss import (
     mesh_laplacian_smoothing,
     mesh_normal_consistency,
 )
-import numpy as np
+
 
 class Blendshape:
     def __init__(self,source_mesh: Meshes,
-                      target_mesh: Meshes):
+                      target_mesh: Meshes,
+                      w_chamfer = 1.0,
+                      w_edge = 1.0,
+                      w_normal=0.01,
+                      w_laplacian = 0.1):
         self.src_mesh = source_mesh
         self.trg_mesh = target_mesh
-        self.w_chamfer = 1.0
-        self.w_edge = 1.0
-        self.w_normal = 0.01
-        self.w_laplacian = 0.1
+        self.w_chamfer = w_chamfer
+        self.w_edge = w_edge
+        self.w_normal = w_normal
+        self.w_laplacian = w_laplacian
         self.init_data()
 
     def init_data(self):
